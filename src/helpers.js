@@ -37,6 +37,7 @@ function __handle_list(gitlab_client, options, error, issues, issue_data, callba
             var existing_issue_id = null;
             var existing_issue_state = null;
 
+            // Goes through the existing issues and check if one already has this title
             for(var i in issues) {
                 if(issues[i].title == issue_data.title) {
                     existing_issue_id = issues[i].id;
