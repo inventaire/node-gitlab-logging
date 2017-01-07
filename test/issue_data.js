@@ -1,5 +1,6 @@
-require('should')
+const should = require('should')
 const __data = require('../src/issue_data')
+const __checksum = require('../src/checksum')
 const options = {
     host: 'https://gitlab.server.tld',
     user: 'gitlab.user',
@@ -9,6 +10,10 @@ const options = {
     environment: 'production'
 }
 
+const err = new Error('doh!')
+const checksum = __checksum(err.stack)
+console.log(checksum)
+
 describe('issue data', function () {
   it('should be a function', function (done) {
     __data.should.be.a.Function()
@@ -16,20 +21,22 @@ describe('issue data', function () {
   })
 
   it('should return an object', function (done) {
-    const err = new Error('doh!')
-    __data(err, options).should.be.an.Object()
+    __data(err, options, checksum).should.be.an.Object()
     done()
   })
 
   it('should return with a title', function (done) {
-    const err = new Error('doh!')
-    __data(err, options).title.should.be.a.String()
+    __data(err, options, checksum).title.should.be.a.String()
     done()
   })
 
   it('should return with a title', function (done) {
-    const err = new Error('doh!')
-    __data(err, options).description.should.be.a.String()
+    __data(err, options, checksum).description.should.be.a.String()
+    done()
+  })
+
+  it('should return a title with the checksum', function (done) {
+    __data(err, options, checksum).title.split(checksum).length.should.equal(2)
     done()
   })
 })

@@ -11,15 +11,8 @@ const NS = 'gitlab-logging/helpers';
 
 // Import libs
 const log = require('loglevel');
-const crypto = require('crypto');
 const __data = require('./issue_data')
-
-// Process issue checksum
-function __checksum(errorMessage) {
-    const FN = '[' + NS + '.__checksum' + ']';
-
-    return crypto.createHash('md5').update(errorMessage).digest('hex');
-}
+const __checksum = require('./checksum')
 
 
 // Handles project list from GitLab
