@@ -112,7 +112,7 @@ function __create(gitlab_client, options, issue_data, callback) {
         title: issue_data.title,
         description: issue_data.description,
         assignee_id: options.assignee_id,
-        labels: 'node, error, bug'
+        labels: issue_data.labels
     }, function(error, row) {
         __handle_create(error, row, callback);
     });
