@@ -12,31 +12,13 @@ const NS = 'gitlab-logging/helpers';
 // Import libs
 const log = require('loglevel');
 const crypto = require('crypto');
-
+const __data = require('./issue_data')
 
 // Process issue checksum
-function __checksum(error) {
+function __checksum(errorMessage) {
     const FN = '[' + NS + '.__checksum' + ']';
 
-    return crypto.createHash('md5').update(error).digest('hex');
-}
-
-
-// Process issue data
-function __data(error, options, checksum) {
-    const FN = '[' + NS + '.__data' + ']';
-
-    var description = {
-        head: '#### Note: this issue has been automatically opened.',
-        trace: '```javascript\n' + error + '\n```'
-    };
-
-    var data = {};
-
-    data.title = ('[ERROR@' + options.environment + '] Events Server Exception (' + checksum + ')');
-    data.description = description.head + '\n\n---\n\n' + description.trace;
-
-    return data;
+    return crypto.createHash('md5').update(errorMessage).digest('hex');
 }
 
 
@@ -168,17 +150,17 @@ function __handle_create(error, row, callback) {
 
 
 // Engages the issue opening process
-exports.__engage = function(gitlab_client, error, options, callback) {
+exports.__engage = function(gitlab_client, errorData, options, callback) {
     const FN = '[' + NS + '.__engage' + ']';
 
     try {
         log.info(FN, 'Engaging GitLab issue opening process...');
 
         // Process issue SHA-1 checksum
-        var checksum = __checksum(error);
+        var checksum = __checksum(errorData.stack);
 
         // Process issue data
-        var issue_data = __data(error, options, checksum);
+        var issue_data = __data(errorData, options, checksum);
 
         // Check if issue already exists
         gitlab_client.issues.list({
