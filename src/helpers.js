@@ -50,7 +50,7 @@ function __handle_list(gitlab_client, options, error, issues, issue_data, callba
                 if(existing_issue_state !== 'opened') {
                     __reopen(gitlab_client, options, existing_issue_id, callback);
                 } else {
-                    log.info(FN, 'Issue existsnd a is already opened, not re-opening');
+                    log.info(FN, 'Issue exists and is already opened, not re-opening');
 
                     if(typeof callback == 'function') {
                         callback();
