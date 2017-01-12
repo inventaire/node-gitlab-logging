@@ -5,6 +5,7 @@ module.exports = function (errorData, options, checksum) {
     const FN = '[' + NS + '.__data' + ']'
     return {
         title: `${errorData.message} [${checksum}]`,
-        description: '```javascript\n' + errorData.stack + '\n```'
+        description: '```javascript\n' + errorData.stack + '\n```',
+        labels: errorData.labels
     }
 }
