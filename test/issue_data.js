@@ -10,33 +10,56 @@ const options = {
     environment: 'production'
 }
 
-const err = new Error('doh!')
-const checksum = __checksum(err.stack)
-console.log(checksum)
+const getErr = function () {
+  const err = new Error('doh!')
+  const checksum = __checksum(err.stack)
+  return { err, checksum }
+}
 
 describe('issue data', function () {
-  it('should be a function', function (done) {
-    __data.should.be.a.Function()
-    done()
+  describe('general', function () {
+    it('should be a function', function (done) {
+      __data.should.be.a.Function()
+      done()
+    })
+
+    it('should return an object', function (done) {
+      const { err, checksum } = getErr()
+      __data(err, options, checksum).should.be.an.Object()
+      done()
+    })
   })
 
-  it('should return an object', function (done) {
-    __data(err, options, checksum).should.be.an.Object()
-    done()
+  describe('title', function () {
+    it('should be a string', function (done) {
+      const { err, checksum } = getErr()
+      __data(err, options, checksum).title.should.be.a.String()
+      done()
+    })
+
+    it('should content the checksum', function (done) {
+      const { err, checksum } = getErr()
+      __data(err, options, checksum).title.split(checksum).length.should.equal(2)
+      done()
+    })
   })
 
-  it('should return with a title', function (done) {
-    __data(err, options, checksum).title.should.be.a.String()
-    done()
+  describe('description', function () {
+    it('should be a string', function (done) {
+      const { err, checksum } = getErr()
+      __data(err, options, checksum).description.should.be.a.String()
+      done()
+    })
   })
 
-  it('should return with a title', function (done) {
-    __data(err, options, checksum).description.should.be.a.String()
-    done()
-  })
-
-  it('should return a title with the checksum', function (done) {
-    __data(err, options, checksum).title.split(checksum).length.should.equal(2)
-    done()
+  describe('labels', function () {
+    it('should be the same object as the one passed', function (done) {
+      const { err, checksum } = getErr()
+      err.labels = null
+      should(__data(err, options, checksum).labels).not.be.ok()
+      err.labels = ['bla', 'tests']
+      __data(err, options, checksum).labels.should.be.an.Array()
+      done()
+    })
   })
 })
