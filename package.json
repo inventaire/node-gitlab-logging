@@ -32,7 +32,7 @@
     "should": "^11.1.2"
   },
   "dependencies": {
-    "loglevel": "1.2.0",
-    "node-gitlab": "1.0.0"
+    "loglevel": "^1.6.1",
+    "node-gitlab": "^1.6.0"
   }
 }
